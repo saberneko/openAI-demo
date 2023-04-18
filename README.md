@@ -1,4 +1,4 @@
-# openAI-demo
+# OpenAI-demo
 
 基于nextjs的OpenAI demo
 
