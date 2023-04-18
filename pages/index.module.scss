@@ -1,0 +1,12 @@
+@import './variable.scss';
+
+.pageWrapper {
+  background-color: $main-bg-color;
+
+  .pageContent {
+    margin: 0 auto;
+    display: flex;
+    max-width: 800px;
+    padding-top: 200px;
+  }
+}
