@@ -39,7 +39,7 @@ export default function useRequest<P = any, T = any>(
 				const result = await response.json();
 
 				if (response.status !== 200) {
-					throw data.error || new Error(`Request failed with status ${response.status}`);
+					throw response.error || new Error(`Request failed with status ${response.status}`);
 				}
 
 				setData(result);
