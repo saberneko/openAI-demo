@@ -8,23 +8,11 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// export const config = {
-//   api: {
-//     bodyParser: false
-//   }
-// }
-
-// function runMiddleware(req, res, fn) {
-//   return new Promise((resolve, reject) => {
-//     fn(req, res, (result) => {
-//       if (result instanceof Error) {
-//         return reject(result);
-//       }
-
-//       return resolve(result);
-//     })
-//   })
-// }
+export const config = {
+  api: {
+    bodyParser: false
+  }
+}
 
 const upload = multer(
   { dest: "uploads/" }
@@ -41,24 +29,30 @@ export default async function (req, res) {
   }
 
   try {
-    // const body = await new Promise((resolve, reject) => {
-    //   upload.single('upload_file')(req, res, (err) => {
-    //     if (err) return reject(err);
-    //     resolve({ file: req.file, path: req.file.path, text: req.body });
-    //   })
-    // })
-    // const response = await openai.createImageEdit(
-    //   fs.createReadStream(body.path),
-    //   '',
-    //   body.text.description,
-    //   1,
-    //   "256x256"
-    // );
-    const response = await openai.createImage({
-      prompt: req.body.prompt,
-      n: 1,
-      size: "512x512",
-    })
+    const body = await new Promise((resolve, reject) => {
+      upload.single('image')(req, res, (err) => {
+        if (err) return reject(err);
+        resolve({ file: req.file, path: req.file?.path, text: req.body });
+      })
+    });
+
+    let response;
+
+    if (body.path) {
+      response = await openai.createImageEdit(
+        fs.createReadStream(body.path),
+        body.text.prompt,
+        '',
+        1,
+        "256x256"
+      );
+    } else {
+      response = await openai.createImage({
+        prompt: body.text.prompt,
+        n: 1,
+        size: "256x256",
+      })
+    }
 
     res.status(200).json({ result: response.data.data[0].url });
 
@@ -77,19 +71,3 @@ export default async function (req, res) {
     }
   }
 }
-
-function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-
-  return `Suggest three names for an animal that is a superhero.
-
-      Animal: Cat
-      Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
-      Animal: Dog
-      Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
-      Animal: ${capitalizedAnimal}
-      Names:`;
-}
-
-// unhandledRejection: TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string or an instance of Buffer or URL. Received undefined
