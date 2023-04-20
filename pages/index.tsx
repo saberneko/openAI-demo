@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Button, Upload, Image, Spin } from '@arco-design/web-react';
 import useRequest from '../services/useRequest';
 import { apiGenerate } from '../services/api';
@@ -9,7 +9,7 @@ const FormItem = Form.Item;
 
 const IMAGE_FIELD = 'image';
 
-function handleFormData(formValues) {
+function handleFormData(formValues: Partial<any>) {
 	const formData = new FormData();
 	for (let [field, value] of Object.entries(formValues)) {
 		if (field === IMAGE_FIELD) {
@@ -36,7 +36,7 @@ export default function Home() {
 		}
 	});
 
-	function onSubmit(event) {
+	function onSubmit(event: Event) {
     event.preventDefault();
 		const formValues = form.getFields();
     const formData = handleFormData(formValues);

@@ -1,7 +1,24 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { Configuration, OpenAIApi } from "openai";
 import multer from 'multer';
 
 let fs = require('fs');
+
+type Message = {
+  message: string
+}
+
+type Data = {
+  result?: string;
+  error?: Message
+}
+
+type Body = {
+  file?: File;
+  path?: string;
+  text?: string
+}
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -16,9 +33,9 @@ export const config = {
 
 const upload = multer(
   { dest: "uploads/" }
-)
+);
 
-export default async function (req, res) {
+export default async function (req: NextApiRequest, res: NextApiResponse<Data>) {
   if (!configuration.apiKey) {
     res.status(500).json({
       error: {
@@ -29,10 +46,10 @@ export default async function (req, res) {
   }
 
   try {
-    const body = await new Promise((resolve, reject) => {
-      upload.single('image')(req, res, (err) => {
+    const body: Body = await new Promise((resolve, reject) => {
+      upload.single('image')(req as any, res as any, (err) => {
         if (err) return reject(err);
-        resolve({ file: req.file, path: req.file?.path, text: req.body });
+        resolve({ file: (req as any).file, path: (req as any).file?.path, text: req.body });
       })
     });
 
@@ -41,14 +58,14 @@ export default async function (req, res) {
     if (body.path) {
       response = await openai.createImageEdit(
         fs.createReadStream(body.path),
-        body.text.prompt,
+        body.text?.prompt,
         '',
         1,
         "256x256"
       );
     } else {
       response = await openai.createImage({
-        prompt: body.text.prompt,
+        prompt: body.text?.prompt,
         n: 1,
         size: "256x256",
       })
@@ -56,7 +73,7 @@ export default async function (req, res) {
 
     res.status(200).json({ result: response.data.data[0].url });
 
-  } catch(error) {
+  } catch(error: any) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
       console.error(error.response.status, error.response.data);
