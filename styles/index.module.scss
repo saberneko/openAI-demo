@@ -17,6 +17,7 @@
     .imageWrapper {
       display: flex;
       justify-content: center;
+      min-width: 200px;
       min-height: 200px;
 
       .image {
