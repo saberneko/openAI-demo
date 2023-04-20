@@ -30,7 +30,7 @@ export default function useRequest<P = any, T = any>(
 	const [loading, setLoading] = useState(false);
 
 	const run = useCallback(
-		async (params) => {
+		async (params: P) => {
 			setLoading(true);
 
 			try {
@@ -39,7 +39,7 @@ export default function useRequest<P = any, T = any>(
 				const result = await response.json();
 
 				if (response.status !== 200) {
-					throw response.error || new Error(`Request failed with status ${response.status}`);
+					throw response.error || new Error(`Request failed with status ${response.status}: ${result.error?.message}`);
 				}
 
 				setData(result);
@@ -48,8 +48,8 @@ export default function useRequest<P = any, T = any>(
 				options?.onSuccess && options.onSuccess(result, params);
 			} catch (error) {
 				console.log(error);
-				Message.error(error);
-				options?.onError && options.onError(error, params)
+				Message.error(error.message);
+				options?.onError && options.onError(error.message, params)
 			}
 
 			setLoading(false);

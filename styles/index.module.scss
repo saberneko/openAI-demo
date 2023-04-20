@@ -4,24 +4,40 @@
   background-color: $main-bg-color;
 
   .pageContent {
+    height: 100vh;
     margin: 0 auto;
     display: flex;
-    flex-direction: column;
-    max-width: 800px;
-    padding-top: 200px;
 
     .formWrapper {
       width: 100%;
+      display: flex;
+      flex: 1 1 400px;
+      flex-direction: column;
+      padding: 36px 48px 24px 12px;
+      border-right: 1px solid rgba(0,0,0,.15);
+    }
+
+    .actionsWrapper {
+      display: flex;
+      justify-content: center;
+
+      .downloadBtn {
+        width: 59%;
+        min-width: 100px;
+      }
     }
 
     .imageWrapper {
       display: flex;
       justify-content: center;
-      min-width: 200px;
-      min-height: 200px;
+      align-items: center;
+      flex: 3 1 600px;
 
       .image {
         min-height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         box-shadow: 0 14px 26px 0 rgba(0,0,87,.2);
       }
     }

@@ -53,6 +53,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse<Data>) 
       })
     });
 
+    console.log('body', body.text)
+
     let response;
 
     if (body.path) {
@@ -61,17 +63,21 @@ export default async function (req: NextApiRequest, res: NextApiResponse<Data>) 
         body.text?.prompt,
         '',
         1,
-        "256x256"
+        body.text?.size,
+        "b64_json"
       );
     } else {
       response = await openai.createImage({
         prompt: body.text?.prompt,
         n: 1,
-        size: "256x256",
+        size: body.text?.size,
+        response_format: "b64_json"
       })
     }
+    
+    const base64Img = `data:image/png;base64,${response.data.data[0].b64_json}`;
 
-    res.status(200).json({ result: response.data.data[0].url });
+    res.status(200).json({ result: base64Img });
 
   } catch(error: any) {
     // Consider adjusting the error handling logic for your use case
