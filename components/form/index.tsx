@@ -1,13 +1,12 @@
 import React, { ChangeEvent } from 'react';
-import { Form, Input, Button, Upload, Message, Radio, Grid } from '@arco-design/web-react';
+import { Form, Input, Button, Upload, Message, Radio, Grid, Modal } from '@arco-design/web-react';
+import { IMAGE_FIELD, UPLOAD_IMAGE_TOOLTIP } from '../../utils/const';
 
 import styles from './index.module.scss';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
 const RadioGroup = Radio.Group;
-
-const IMAGE_FIELD = 'image';
 
 type FormValue = {
   formData: FormData
@@ -33,12 +32,22 @@ export default function FormConfigure(props: IFormConfigureProps) {
 			const formValues = form.getFields();
 			const formData = handleFormData(formValues);
 			// 生成图片
-			// runGenerate({ formData })
       props.onSubmit && props.onSubmit({ formData });
 		} catch (e) {
 			console.error(e);
 			Message.error('validate failed');
 		}
+  }
+
+  const handleBeforeUpload = (file: File): boolean | Promise<any> => {
+    return new Promise((resolve, reject) => {
+      if (file.size / (1024 * 1024) < 4) {
+        resolve(true);
+      } else {
+        Message.error('The file must be less than 4MB, Please upload again');
+        reject('cancel');
+      }
+    })
   }
 
   return (
@@ -59,7 +68,12 @@ export default function FormConfigure(props: IFormConfigureProps) {
             }
           ]}
         >
-          <TextArea placeholder='Please enter prompt' className={styles.promptArea}/>
+          <TextArea
+            showWordLimit
+            maxLength={1000}
+            placeholder='Please enter prompt'
+            className={styles.promptArea}
+          />
         </FormItem>
         <FormItem
           label="Size"
@@ -75,13 +89,16 @@ export default function FormConfigure(props: IFormConfigureProps) {
           label="Image"
           field="image"
           triggerPropName="fileList"
+          tooltip={UPLOAD_IMAGE_TOOLTIP}
         >
           <Upload
             listType="picture-card"
             imagePreview
             name="files"
             limit={1}
+            accept="image/png"
             action="/"
+            beforeUpload={handleBeforeUpload}
           />
         </FormItem>
         <FormItem wrapperCol={{ offset: 5 }}>

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Image, Spin, Grid } from '@arco-design/web-react';
+import { Grid } from '@arco-design/web-react';
 import { IconDownload } from '@arco-design/web-react/icon';
 import FormConfigure from '../components/form';
 import ImageGallery from '../components/image-gallery';
