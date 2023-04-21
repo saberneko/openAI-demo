@@ -36,8 +36,9 @@ export default function ImageGallery(props: IImageGalleryProps) {
         }}
         src={imgUrl}
         loader={
-          <Image
+          imgUrl && <Image
             width={imageRect.width}
+            height={imageRect.height}
             alt="image-blur"
             src={imgUrl}
             style={{
