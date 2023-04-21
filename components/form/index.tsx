@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { Form, Input, Button, Upload, Message, Radio, Grid, Modal } from '@arco-design/web-react';
+import { Form, Input, Button, Upload, Message, Radio } from '@arco-design/web-react';
 import { IMAGE_FIELD, UPLOAD_IMAGE_TOOLTIP } from '../../utils/const';
 
 import styles from './index.module.scss';
@@ -78,8 +78,9 @@ export default function FormConfigure(props: IFormConfigureProps) {
         <FormItem
           label="Size"
           field="size"
+          initialValue={'512x512'}
         >
-          <RadioGroup defaultValue='512x512' onChange={props.onImageSizeChange}>
+          <RadioGroup onChange={props.onImageSizeChange}>
             <Radio value='256x256'>256x256</Radio>
             <Radio value='512x512'>512x512</Radio>
             <Radio value='1024x1024'>1024x1024</Radio>

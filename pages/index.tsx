@@ -48,11 +48,8 @@ export default function Home() {
 						<Col offset={5}>
 							<DownLoadButton
 								type="primary"
-								style={{
-									visibility: submitLoading ? 'visible' : 'hidden'
-								}}
 								className={styles.downloadBtn}
-								disabled={submitLoading}
+								disabled={submitLoading || !imgUrl}
 								icon={<IconDownload />}
 								imgUrl={imgUrl}
 							/>

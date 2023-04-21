@@ -25,15 +25,15 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+const upload = multer(
+  { dest: "uploads/" }
+);
+
 export const config = {
   api: {
     bodyParser: false
   }
 }
-
-const upload = multer(
-  { dest: "uploads/" }
-);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   if (!configuration.apiKey) {
@@ -52,8 +52,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         resolve({ file: (req as any).file, path: (req as any).file?.path, text: req.body });
       })
     });
-
-    console.log('body', body.text)
 
     let response;
 
