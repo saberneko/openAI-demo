@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button, ButtonProps } from '@arco-design/web-react';
-import { downLoad } from './imageLoad';
+import { downloadImage } from './imageLoad';
 
-interface IProps extends ButtonProps {
+interface IDownloadButtonProps extends ButtonProps {
+  /** base64格式 */
   imgUrl: string;
 }
 
-export default function DownLoadButton(props: IProps) {
+export default function DownloadButton(props: IDownloadButtonProps) {
   const { imgUrl, children = 'Download', onClick, ...restProps } = props;
 
-  const handleDownLoad = () => {
-    downLoad(imgUrl);
-  }
+  const handleDownload = useCallback(() => {
+    downloadImage(imgUrl);
+  }, [imgUrl]);
 
   return (
-    <Button onClick={handleDownLoad} {...restProps}>{children}</Button>
+    <Button onClick={handleDownload} {...restProps}>{children}</Button>
   )
 }

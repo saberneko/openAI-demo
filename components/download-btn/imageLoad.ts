@@ -1,6 +1,11 @@
 import { convertBase64UrlToBlob } from './utils';
 
-function downLoad (urlData: any) {
+/**
+ * @description 下载图片
+ * @param urlData base64 url {string}
+ * @returns void
+ */
+function downloadImage (urlData: string) {
   let a = document.createElement('a');
   let blob = convertBase64UrlToBlob(urlData);
 
@@ -10,5 +15,5 @@ function downLoad (urlData: any) {
 }
 
 export {
-  downLoad
+  downloadImage
 }
