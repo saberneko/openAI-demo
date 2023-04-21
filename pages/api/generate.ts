@@ -35,7 +35,7 @@ const upload = multer(
   { dest: "uploads/" }
 );
 
-export default async function (req: NextApiRequest, res: NextApiResponse<Data>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   if (!configuration.apiKey) {
     res.status(500).json({
       error: {
