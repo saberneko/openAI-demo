@@ -35,17 +35,7 @@ export default function ImageGallery(props: IImageGalleryProps) {
           height: imageRect.height
         }}
         src={imgUrl}
-        loader={
-          imgUrl && <Image
-            width={imageRect.width}
-            height={imageRect.height}
-            alt="image-blur"
-            src={imgUrl}
-            style={{
-              filter: 'blur(5px)'
-            }}
-          />
-        }
+        loader={true}
       />
     </Spin>
   )

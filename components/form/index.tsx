@@ -1,11 +1,11 @@
-import React, { ChangeEvent } from 'react';
-import { Form, Input, Button, Upload, Message, Radio } from '@arco-design/web-react';
+import React, { ChangeEvent, forwardRef, useImperativeHandle, useRef } from 'react';
+import { Form, Button, Upload, Message, Radio } from '@arco-design/web-react';
 import { IMAGE_FIELD, UPLOAD_IMAGE_TOOLTIP } from '../../utils/const';
+import PromptArea from '../prompt-area';
 
 import styles from './index.module.scss';
 
 const FormItem = Form.Item;
-const TextArea = Input.TextArea;
 const RadioGroup = Radio.Group;
 
 type FormValue = {
@@ -19,11 +19,13 @@ interface IFormConfigureProps {
   onImageSizeChange?: (value: any, event: ChangeEvent) => void;
   /** 提交表单时 */
   onSubmit?: (v: FormValue) => void;
+  onCreatePrompt: (value: any) => void;
 }
 
-export default function FormConfigure(props: IFormConfigureProps) {
+const FormConfigure = forwardRef(function (props: IFormConfigureProps, ref) {
   const { loading = false } = props;
 	const [form] = Form.useForm();
+  const formRef = useRef(null);
 
   const onSubmit = async (event: Event) => {
     event.preventDefault();
@@ -50,9 +52,17 @@ export default function FormConfigure(props: IFormConfigureProps) {
     })
   }
 
+  useImperativeHandle(ref, () => {
+    return {
+      getFormInstance() {
+        return formRef.current;
+      }
+    }
+  }, [])
+
   return (
     <div className={styles.formWrapper}>
-      <Form form={form} disabled={loading}>
+      <Form ref={formRef} form={form} disabled={loading}>
         <FormItem
           label="Prompt"
           field="prompt"
@@ -68,12 +78,7 @@ export default function FormConfigure(props: IFormConfigureProps) {
             }
           ]}
         >
-          <TextArea
-            showWordLimit
-            maxLength={1000}
-            placeholder='Please enter prompt'
-            className={styles.promptArea}
-          />
+          <PromptArea onCreatePrompt={props.onCreatePrompt}/>
         </FormItem>
         <FormItem
           label="Size"
@@ -112,7 +117,7 @@ export default function FormConfigure(props: IFormConfigureProps) {
       </Form>
     </div>
   )
-}
+});
 
 function handleFormData(formValues: Partial<any>) {
 	const formData = new FormData();
@@ -126,3 +131,5 @@ function handleFormData(formValues: Partial<any>) {
 
 	return formData;
 }
+
+export default FormConfigure;

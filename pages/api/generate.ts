@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { Configuration, OpenAIApi } from "openai";
+import { openai, configuration } from '../../services/openai';
 import multer from 'multer';
 
 let fs = require('fs');
@@ -14,16 +14,16 @@ type Data = {
   error?: Message
 }
 
+type ImageSize = '256x256' | '512x512' | '1024x1024';
+
 type Body = {
   file?: File;
   path?: string;
-  text?: string
+  text: {
+    prompt: string;
+    size: ImageSize;
+  }
 }
-
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
 
 const upload = multer(
   { dest: "uploads/" }
@@ -58,17 +58,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (body.path) {
       response = await openai.createImageEdit(
         fs.createReadStream(body.path),
-        body.text?.prompt,
-        '',
+        body.text.prompt,
+        undefined,
         1,
-        body.text?.size,
+        body.text.size,
         "b64_json"
       );
     } else {
       response = await openai.createImage({
         prompt: body.text?.prompt,
         n: 1,
-        size: body.text?.size,
+        size: body.text.size,
         response_format: "b64_json"
       })
     }
@@ -83,7 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       console.error(error.response.status, error.response.data);
       res.status(error.response.status).json(error.response.data);
     } else {
-      console.error(`Error with OpenAI API request: ${error.message}`);
+      console.error(`Error with OpenAI API request: ${error.code} ${error.message}`);
       res.status(500).json({
         error: {
           message: 'An error occurred during your request.',
