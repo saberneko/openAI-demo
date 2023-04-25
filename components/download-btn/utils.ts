@@ -17,3 +17,19 @@ export function convertBase64UrlToBlob (urlData: string) {
 
   return new Blob([ia], {type: mimeString})
 }
+
+/***
+ * @description 判断是否为base64格式的图片
+ * @param str base64 string data:image/*;base64,xxx {string}
+ * @returns boolean
+ */
+export function isBase64Image(str?: string) {
+  if (!str || str == '' || str.trim() == '') {
+    return false;
+  }
+
+  if (str.startsWith('data:image')) {
+    return true;
+  }
+  return false;
+}

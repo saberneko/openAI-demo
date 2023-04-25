@@ -10,7 +10,7 @@ interface IPromptArea {
   value?: any;
   loading?: boolean;
   onChange?: () => void;
-  onCreatePrompt: (value: any) => void;
+  onCreatePrompt?: (value: any) => void;
 }
 
 export default function PromptArea(props: IPromptArea) {
