@@ -14,7 +14,9 @@ type FormValue = {
 
 interface IFormConfigureProps {
   /** 表单提交状态 */
-  loading?: boolean;
+  submitLoading?: boolean;
+  /** 加载prompt状态 */
+  promptLoading?: boolean;
   /** 图片尺寸大小变化回调 */
   onImageSizeChange?: (value: any, event: ChangeEvent) => void;
   /** 提交表单时 */
@@ -23,7 +25,7 @@ interface IFormConfigureProps {
 }
 
 const FormConfigure = forwardRef(function (props: IFormConfigureProps, ref) {
-  const { loading = false } = props;
+  const { submitLoading = false, promptLoading } = props;
 	const [form] = Form.useForm();
   const formRef = useRef(null);
 
@@ -43,6 +45,7 @@ const FormConfigure = forwardRef(function (props: IFormConfigureProps, ref) {
 
   const handleBeforeUpload = (file: File): boolean | Promise<any> => {
     return new Promise((resolve, reject) => {
+      // 大于4MB不能上传
       if (file.size / (1024 * 1024) < 4) {
         resolve(true);
       } else {
@@ -62,7 +65,7 @@ const FormConfigure = forwardRef(function (props: IFormConfigureProps, ref) {
 
   return (
     <div className={styles.formWrapper}>
-      <Form ref={formRef} form={form} disabled={loading}>
+      <Form ref={formRef} form={form} disabled={submitLoading}>
         <FormItem
           label="Prompt"
           field="prompt"
@@ -78,7 +81,10 @@ const FormConfigure = forwardRef(function (props: IFormConfigureProps, ref) {
             }
           ]}
         >
-          <PromptArea onCreatePrompt={props.onCreatePrompt}/>
+          <PromptArea
+            loading={promptLoading}
+            onCreatePrompt={props.onCreatePrompt}
+          />
         </FormItem>
         <FormItem
           label="Size"
@@ -110,7 +116,7 @@ const FormConfigure = forwardRef(function (props: IFormConfigureProps, ref) {
         <FormItem wrapperCol={{ offset: 5 }}>
           <Button
             type="primary"
-            loading={loading}
+            loading={submitLoading}
             onClick={onSubmit}
           >Generate Image</Button>
         </FormItem>

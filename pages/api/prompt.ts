@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-  const input = req.body.input || '';
+  const input = JSON.parse(req.body).input || '';
   if (input.trim().length == 0) {
     res.status(400).json({
       error: {

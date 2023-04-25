@@ -25,6 +25,7 @@ export default function Home() {
 
 	// 优化Prompt
 	const {
+		loading: promptLoading,
 		run: runCreatePrompt
 	} = useRequest(apiCreatePrompt, {
 		manual: true,
@@ -63,7 +64,8 @@ export default function Home() {
 				<div className={styles.configureWrapper}>
 					<FormConfigure
 						ref={formRef}
-						loading={submitLoading}
+						submitLoading={submitLoading}
+						promptLoading={promptLoading}
 						onSubmit={handleSubmit}
 						onCreatePrompt={handleCreatePrompt}
 						onImageSizeChange={handleImageSize}

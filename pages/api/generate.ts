@@ -43,15 +43,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-  const input = req.body.prompt || '';
-  if (input.trim().length == 0) {
-    res.status(400).json({
-      error: {
-        message: "Please enter a valid prompt"
-      }
-    })
-  }
-
   try {
     const body: Body = await new Promise((resolve, reject) => {
       upload.single('image')(req as any, res as any, (err) => {
