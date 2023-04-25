@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import Image from 'next/image';
 import { Image as ArcoImage, Spin } from '@arco-design/web-react';
 
 import styles from './index.module.scss';
