@@ -12,6 +12,7 @@ function downloadImage (urlData: string) {
   a.download = 'defaut_image';
   a.href = URL.createObjectURL(blob);
   a.dispatchEvent(new MouseEvent('click'));
+  URL.revokeObjectURL(a.href);
 }
 
 export {
