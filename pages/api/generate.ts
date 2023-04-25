@@ -51,12 +51,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       })
     });
 
+    const prompt = body.text.prompt;
+    if (prompt.trim().length == 0) {
+      res.status(400).json({
+        error: {
+          message: "Please enter a valid prompt"
+        }
+      })
+    }
+
     let response;
 
     if (body.path) {
       response = await openai.createImageEdit(
         fs.createReadStream(body.path),
-        body.text.prompt,
+        prompt,
         undefined,
         1,
         body.text.size,

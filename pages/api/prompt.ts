@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     const response = await openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: generatePrompt(input),
+      prompt: generatePrompt(input.trim()),
       temperature: 0.7,
       max_tokens: 256
     }) 
@@ -54,7 +54,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 function generatePrompt(input: any) {
-  console.log('input', input);
   return `The following is an input and output for a world-class, cutting edge, advanced prompt enhancer for a text to image AI that professionally adds creative details and nuances to the prompt, as well as clearly and coherently re-describes prompts put in the input. 
   Input Prompt: ${input}
   AI Output Prompt:`
