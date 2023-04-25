@@ -2,9 +2,10 @@
 
 基于 nextjs 的 OpenAI demo
 
-![image](https://github.com/saberneko/openAI-demo/blob/master/IMG/demo-2.jpeg)
+![image](https://github.com/saberneko/openAI-demo/blob/master/IMG/prompt%2Bimage-generate.jpg)
 
-支持输入 prompt 和图片，图片遵循 openAI API 标准, 必须是 PNG 图片，小于 4MB，正方形, 有透明的部分
+支持输入 prompt 和图片，接入GPT-3模型，优化prompt
+Tips: 图片遵循 openAI API 标准, 必须是 PNG 图片，小于 4MB，正方形, 有透明的部分
 
 > The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not provided, image must have transparency, which will be used as the mask.
 
