@@ -5,16 +5,14 @@ import multer from 'multer';
 
 let fs = require('fs');
 
-type Message = {
-  message: string
-}
-
-type Data = {
-  result?: string;
-  error?: Message
-}
-
 type ImageSize = '256x256' | '512x512' | '1024x1024';
+
+type ResponseData = {
+  result?: string;
+  error?: {
+    message: string
+  }
+}
 
 type Body = {
   file?: File;
@@ -35,7 +33,7 @@ export const config = {
   }
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   if (!configuration.apiKey) {
     res.status(500).json({
       error: {
@@ -43,6 +41,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       }
     });
     return;
+  }
+
+  const input = req.body.prompt || '';
+  if (input.trim().length == 0) {
+    res.status(400).json({
+      error: {
+        message: "Please enter a valid prompt"
+      }
+    })
   }
 
   try {

@@ -3,11 +3,11 @@ import { Message } from '@arco-design/web-react';
 
 interface UseRequestReturnType<P, T> {
 	/** 返回的数据 */
-	data: T;
+	data: T | any;
 	/** loading状态 */
 	loading: boolean;
 	/** 触发请求执行 */
-	run: (params: P) => void;
+	run: (params: P | any) => void;
 }
 
 interface Options<P, T> {
@@ -22,7 +22,7 @@ interface Options<P, T> {
 }
 
 export default function useRequest<P = any, T = any>(
-	request: (params: P) => Promise<any>,
+	request: (params: P | any) => Promise<any>,
 	options?: Options<P, T>
 ): UseRequestReturnType<P, T> {
 	const [data, setData] = useState(null);
@@ -30,7 +30,7 @@ export default function useRequest<P = any, T = any>(
 	const [loading, setLoading] = useState(false);
 
 	const run = useCallback(
-		async (params: P) => {
+		async (params: P | any) => {
 			setLoading(true);
 
 			try {
@@ -46,10 +46,10 @@ export default function useRequest<P = any, T = any>(
 				setLoading(false);
 
 				options?.onSuccess && options.onSuccess(result, params);
-			} catch (error) {
+			} catch (error: any) {
 				console.log(error);
-				Message.error(error.message);
-				options?.onError && options.onError(error.message, params)
+				Message.error(error?.message);
+				options?.onError && options.onError(error?.message, params)
 			}
 
 			setLoading(false);

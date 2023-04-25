@@ -1,16 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { configuration, openai } from '../../services/openai';
 
-type Message = {
-  message: string
-}
-
-type Data = {
+type ResponseData = {
   result?: any;
-  error?: Message
+  error?: {
+    message: string
+  }
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   if (!configuration.apiKey) {
     res.status(500).json({
       error: {
@@ -20,10 +18,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
+  const input = req.body.input || '';
+  if (input.trim().length == 0) {
+    res.status(400).json({
+      error: {
+        message: "Please enter a valid prompt"
+      }
+    })
+  }
+
   try {
     const response = await openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: generatePrompt(JSON.parse(req.body).input),
+      prompt: generatePrompt(input),
       temperature: 0.7,
       max_tokens: 256
     }) 
